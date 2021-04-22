@@ -26,38 +26,38 @@ const start = () => {
 
         if (optionSelect == 'View All Employees') {
             viewEmployees();
-        }
+        };
         if (optionSelect == 'View All Employees By Department') {
             viewEmployeesDepartment();
-        }
+        };
         if (optionSelect == 'View All Employees By Mananger') {
             viewEmployeesManager();
-        }
+        };
         if (optionSelect == 'Add Employee') {
             addEmployee();
-        }
+        };
         if (optionSelect == 'Remove Employee') {
             removeEmployee();
-        }
+        };
         if (optionSelect == 'Update Employee Role') {
             updateRole();
-        }
+        };
         if (optionSelect == 'Update Employee Manager') {
             updateManager();
-        }
+        };
         if (optionSelect == 'View All Roles') {
             viewAll();
-        }
+        };
         
-    })
-}
+    });
+};
 
 const viewEmployees = () => {
-    connection.query('SELECT * FROM employee', (err, results) => {
+    connection.query('SELECT first_name, last_name FROM employee', (err, results) => {
         if (err) throw err;
         console.table(results);
+        start();
     });
-    start();
 }
 
 const viewEmployeesDepartment = () => {
@@ -120,7 +120,6 @@ const addEmployee = () => {
             )
         });
     });
-
 };
 
 const removeEmployee = () => {
@@ -157,7 +156,11 @@ const updateManager = () => {
 };
 
 const viewAll = () => {
-
+    connection.query('SELECT * FROM employee', (err, results) => {
+        if (err) throw err;
+        console.table(results);
+    });
+    start();
 };
 
 start();
