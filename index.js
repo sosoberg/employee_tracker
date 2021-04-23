@@ -125,7 +125,7 @@ const addEmployee = () => {
 const removeEmployee = () => {
     connection.query('SELECT * FROM employee', (err, results) => {
         if (err) throw err;
-    
+        
         inquirer
             .prompt([
             {
@@ -134,17 +134,31 @@ const removeEmployee = () => {
                 message: 'Select Employee Role:',
                 choices() {
                     const choiceArray = [];
-                    results.forEach(({ first_name, last_name }) => {
-                        const fullName = `${ first_name } ${last_name}`
+                    results.forEach(({ first_name, last_name, id }) => {
+                        const fullName = `${ id } ${ first_name } ${last_name}`
+
                         choiceArray.push(fullName);
                     });
                     return choiceArray;
-                  },
+                  }
             },
-        ]);
-        
+        ])
+        .then((answer) => {
+            const { employeeRole } = answer;
+            for (let i = 0; i < employeeRole.length; i++) {
+                myID = employeeRole[0];
+                console.log(myID)
+                connection.query(`DELETE FROM employee WHERE id = ?`, myID, (err, results) => {
+                    if (err) return err;
+    
+                    console.log('employee deleted')
+                })
+                //connection.end();
+            }
+            connection.end();
+            setTimeout(start, 200);
+        });      
     });
-    start();
 };
 
 const updateRole = () => {
