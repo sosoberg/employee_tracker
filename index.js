@@ -206,7 +206,50 @@ const removeEmployee = () => {
 };
 
 const updateRole = () => {
+    connection.query('SELECT * FROM employee', (err, results) => {
+        if (err) throw err;
+        inquirer
+            .prompt([
+            {
+                name: 'employeeSelect',
+                type: 'rawlist',
+                message: 'Select Employee to Edit:',
+                choices() {
+                    const choiceArray = [];
+                    results.forEach(({ first_name, last_name }) => {
+                        const fullName = `${ first_name } ${last_name}`;
+                        choiceArray.push(fullName);
+                    });
+                    return choiceArray;
+                  }
+            },
+        ])
+        .then((answer) => {
+            
+            connection.query(`SELECT * FROM role`, (err, results) => {
+                if (err) return err;
 
+                inquirer
+                    .prompt([
+                        {
+                            name: 'roleSelect',
+                            type: 'rawlist',
+                            message: 'Select Role to change to:',
+                            choices() {
+                                const choiceArray = [];
+                                results.forEach(({ title }) => {
+                                    choiceArray.push(title);
+                                });
+                                return choiceArray;
+                              }  
+                        }
+                    ])
+                    .then((answer) => {
+
+                    })
+            });
+        }); 
+    });
 };
 
 const updateManager = () => {
