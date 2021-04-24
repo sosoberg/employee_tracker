@@ -18,8 +18,8 @@ const start = () => {
         type: 'list',
         message: 'What would you like to do?',
         choices: ['View All Employees', 'View All Employees By Department', 
-        'View All Employees By Mananger','Add Employee', 'Remove Employee', 
-        'Update Employee Role', 'Update Employee Manager', 'View All Roles']
+        'View All Employees By Mananger','Add Employee', 'Add Role', 'Remove Employee', 
+        'Update Employee Role', 'Update Employee Manager', 'View All']
     })
     .then((data) => {
         const { optionSelect } = data;
@@ -36,6 +36,9 @@ const start = () => {
         if (optionSelect == 'Add Employee') {
             addEmployee();
         };
+        if (optionSelect == 'Add Role') {
+            addRole();
+        };
         if (optionSelect == 'Remove Employee') {
             removeEmployee();
         };
@@ -45,7 +48,7 @@ const start = () => {
         if (optionSelect == 'Update Employee Manager') {
             updateManager();
         };
-        if (optionSelect == 'View All Roles') {
+        if (optionSelect == 'View All') {
             viewAll();
         };
         
@@ -122,6 +125,51 @@ const addEmployee = () => {
     });
 };
 
+const addRole = () => {
+    connection.query('SELECT * FROM department', (err, results) => {
+        if (err) throw err;
+        inquirer
+            .prompt([
+            {
+                name: 'roleName',
+                type: 'input',
+                message: 'Title of Role: '
+            },
+            {
+                name: 'rolesalary',
+                type: 'input',
+                message: 'Role Salary: '
+            },
+            {
+                name: 'departmentID',
+                type: 'input',
+                message: 'Department:',
+                choices() {
+                    const choiceArray = [];
+                    results.forEach(({ name }) => {
+                      choiceArray.push(name);
+                    });
+                    return choiceArray;
+                  },
+            },
+        ])
+        .then((answer) => {
+            connection.query('INSERT INTO role SET ?', 
+            {
+                title: answer.roleName,
+                salary: answer.rolesalary,
+                department_id: answer.departmentID,
+            },
+            (err) => {
+                if (err) throw err;
+                console.log('Role Added');
+                start();
+            }
+            );
+        });
+    });
+};
+
 const removeEmployee = () => {
     connection.query('SELECT * FROM employee', (err, results) => {
         if (err) throw err;
@@ -147,16 +195,12 @@ const removeEmployee = () => {
             const { employeeRole } = answer;
             for (let i = 0; i < employeeRole.length; i++) {
                 myID = employeeRole[0];
-                console.log(myID)
                 connection.query(`DELETE FROM employee WHERE id = ?`, myID, (err, results) => {
                     if (err) return err;
-    
-                    console.log('employee deleted')
-                })
-                //connection.end();
+                })   
             }
-            connection.end();
-            setTimeout(start, 200);
+            console.log('employee deleted')
+            start();  
         });      
     });
 };
@@ -173,6 +217,7 @@ const viewAll = () => {
     connection.query('SELECT * FROM employee', (err, results) => {
         if (err) throw err;
         console.table(results);
+        console.log('Enter any key to exit')
     });
     start();
 };
