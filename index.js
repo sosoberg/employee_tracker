@@ -2,6 +2,7 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 const consoleTable = require('console.table');
+const CheckboxPrompt = require('inquirer/lib/prompts/checkbox');
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -17,7 +18,7 @@ const start = () => {
         name: 'optionSelect',
         type: 'list',
         message: 'What would you like to do?',
-        choices: ['View All Employees', 'View All Employees By Department (in progress)', 
+        choices: ['View All Employees', 'View All Employees By Department', 
         'View All Employees By Mananger (in progress)','Add Employee', 'Add Manager', 'Add Role', 'Remove Employee', 
         'Update Employee Role (in progress)', 'Update Employee Manager (in progress)', 'View All']
     })
@@ -27,7 +28,7 @@ const start = () => {
         if (optionSelect == 'View All Employees') {
             viewEmployees();
         };
-        if (optionSelect == 'View All Employees By Department (in progress)') {
+        if (optionSelect == 'View All Employees By Department') {
             viewEmployeesDepartment();
         };
         if (optionSelect == 'View All Employees By Mananger (in progress)') {
@@ -67,12 +68,72 @@ const viewEmployees = () => {
 };
 
 const viewEmployeesDepartment = () => {
-    inquirer
-        .prompt
+    connection.query('SELECT * FROM employee', (err, results) => {
+        if (err) throw err;
+
+        inquirer
+            .prompt({
+                name: 'departmentSelect',
+                type: 'list',
+                message: 'Select Department:',
+                choices() {
+                    const choiceArray = [];
+                    const newArray = [];
+                    results.forEach(({ department }) => {
+                        choiceArray.push(department);
+                        choiceArray.forEach((department) => {
+                            if (!newArray.includes(department)) {
+                                newArray.push(department)
+                            };
+                        });
+                    });
+                    return newArray;
+                  },
+            })
+            .then((answer) => {
+                connection.query('SELECT * FROM employee WHERE ?', 
+                { department: answer.departmentSelect },
+                (err, res) => {
+                    console.table(res)
+                })
+                setTimeout(start, 200)
+            });
+    });
+
 };
 
 const viewEmployeesManager = () => {
+    connection.query('SELECT * FROM employee', (err, results) => {
+        if (err) throw err;
 
+        inquirer
+            .prompt({
+                name: 'managerSelect',
+                type: 'list',
+                message: 'Select Manager:',
+                choices() {
+                    const choiceArray = [];
+                    const newArray = [];
+                    results.forEach(({ manager_id }) => {
+                        choiceArray.push(manager_id);
+                        choiceArray.forEach((manager_id) => {
+                            if (!newArray.includes(manager_id)) {
+                                newArray.push(manager_id)
+                            };
+                        });
+                    });
+                    return newArray;
+                  },
+            })
+            .then((answer) => {
+                connection.query('SELECT * FROM employee WHERE ?', 
+                { manager_id: answer.managerSelect },
+                (err, res) => {
+                    console.table(res)
+                })
+                setTimeout(start, 200)
+            });
+    });
 };
 
 const addEmployee = () => {
