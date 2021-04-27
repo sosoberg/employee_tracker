@@ -17,9 +17,9 @@ const start = () => {
         name: 'optionSelect',
         type: 'list',
         message: 'What would you like to do?',
-        choices: ['View All Employees', 'View All Employees By Department', 
-        'View All Employees By Mananger','Add Employee', 'Add Role', 'Remove Employee', 
-        'Update Employee Role', 'Update Employee Manager', 'View All']
+        choices: ['View All Employees', 'View All Employees By Department (in progress)', 
+        'View All Employees By Mananger (in progress)','Add Employee', 'Add Manager', 'Add Role', 'Remove Employee', 
+        'Update Employee Role (in progress)', 'Update Employee Manager (in progress)', 'View All']
     })
     .then((data) => {
         const { optionSelect } = data;
@@ -27,25 +27,28 @@ const start = () => {
         if (optionSelect == 'View All Employees') {
             viewEmployees();
         };
-        if (optionSelect == 'View All Employees By Department') {
+        if (optionSelect == 'View All Employees By Department (in progress)') {
             viewEmployeesDepartment();
         };
-        if (optionSelect == 'View All Employees By Mananger') {
+        if (optionSelect == 'View All Employees By Mananger (in progress)') {
             viewEmployeesManager();
         };
         if (optionSelect == 'Add Employee') {
             addEmployee();
         };
+        if (optionSelect == 'Add Manager') {
+            addManager();
+        }
         if (optionSelect == 'Add Role') {
             addRole();
         };
         if (optionSelect == 'Remove Employee') {
             removeEmployee();
         };
-        if (optionSelect == 'Update Employee Role') {
+        if (optionSelect == 'Update Employee Role (in progress)') {
             updateRole();
         };
-        if (optionSelect == 'Update Employee Manager') {
+        if (optionSelect == 'Update Employee Manager (in progress)') {
             updateManager();
         };
         if (optionSelect == 'View All') {
@@ -59,17 +62,17 @@ const viewEmployees = () => {
     connection.query('SELECT first_name, last_name FROM employee', (err, results) => {
         if (err) throw err;
         console.table(results);
-        start();
     });
-}
+    setTimeout(start, 200);
+};
 
 const viewEmployeesDepartment = () => {
 
-}
+};
 
 const viewEmployeesManager = () => {
 
-}
+};
 
 const addEmployee = () => {
 // asks name, role, manager
@@ -90,7 +93,7 @@ const addEmployee = () => {
             },
             {
                 name: 'employeeRole',
-                type: 'rawlist',
+                type: 'list',
                 message: 'Select Employee Role:',
                 choices() {
                     const choiceArray = [];
@@ -102,7 +105,7 @@ const addEmployee = () => {
             },
             {
                 name: 'employeeManager',
-                type: 'rawlist',
+                type: 'list',
                 message: 'Employee Manager:',
                 choices: [1, 2, 3, 4],
             },
@@ -142,7 +145,7 @@ const addRole = () => {
             },
             {
                 name: 'departmentID',
-                type: 'input',
+                type: 'list',
                 message: 'Department:',
                 choices() {
                     const choiceArray = [];
@@ -170,6 +173,51 @@ const addRole = () => {
     });
 };
 
+const addManager = () => {
+    connection.query('SELECT * FROM department', (err, results) => {
+        if (err) throw err;
+        inquirer
+            .prompt([
+            {
+                name: 'managerFN',
+                type: 'input',
+                message: 'Manager First Name: '
+            },
+            {
+                name: 'managerLN',
+                type: 'input',
+                message: 'Manager Last Name: '
+            },
+            {
+                name: 'department',
+                type: 'list',
+                message: 'Department:',
+                choices() {
+                    const choiceArray = [];
+                    results.forEach(({ name }) => {
+                      choiceArray.push(name);
+                    });
+                    return choiceArray;
+                  },
+            },
+        ])
+        .then((answer) => {
+            connection.query('INSERT INTO employee SET ?', 
+            {
+                first_name: answer.managerFN,
+                last_name: answer.managerLN,
+                role_id: 'Manager',
+            },
+            (err) => {
+                if (err) throw err;
+                console.log('Manager Added');
+                start();
+            }
+            );
+        });
+    });
+};
+
 const removeEmployee = () => {
     connection.query('SELECT * FROM employee', (err, results) => {
         if (err) throw err;
@@ -178,7 +226,7 @@ const removeEmployee = () => {
             .prompt([
             {
                 name: 'employeeRole',
-                type: 'rawlist',
+                type: 'list',
                 message: 'Select Employee Role:',
                 choices() {
                     const choiceArray = [];
@@ -200,7 +248,7 @@ const removeEmployee = () => {
                 })   
             }
             console.log('employee deleted')
-            start();  
+            setTimeout(start, 200);
         });      
     });
 };
@@ -212,7 +260,7 @@ const updateRole = () => {
             .prompt([
             {
                 name: 'employeeSelect',
-                type: 'rawlist',
+                type: 'list',
                 message: 'Select Employee to Edit:',
                 choices() {
                     const choiceArray = [];
@@ -225,7 +273,7 @@ const updateRole = () => {
             },
         ])
         .then((answer) => {
-            
+            const {employeeSelect} = answer;
             connection.query(`SELECT * FROM role`, (err, results) => {
                 if (err) return err;
 
@@ -233,7 +281,7 @@ const updateRole = () => {
                     .prompt([
                         {
                             name: 'roleSelect',
-                            type: 'rawlist',
+                            type: 'list',
                             message: 'Select Role to change to:',
                             choices() {
                                 const choiceArray = [];
@@ -245,8 +293,12 @@ const updateRole = () => {
                         }
                     ])
                     .then((answer) => {
+                        console.log(employeeSelect)
 
-                    })
+                        connection.query('UPDATE employee SET role_id = ? WHERE first_name = ?, last_name = ?', (err, results) => {
+                            console.log(results);
+                        });
+                    });
             });
         }); 
     });
@@ -260,9 +312,8 @@ const viewAll = () => {
     connection.query('SELECT * FROM employee', (err, results) => {
         if (err) throw err;
         console.table(results);
-        console.log('Enter any key to exit')
     });
-    start();
+    setTimeout(start, 200);
 };
 
 start();

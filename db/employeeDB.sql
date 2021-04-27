@@ -16,13 +16,14 @@ create table role (
     department_id varchar(30) not null,
     primary key (id)
 );
-
+use employeesDB;
+drop table if exists employee;
 create table employee (
 	id int auto_increment,
     first_name varchar(30) not null,
     last_name varchar(30) not null,
-    role_id int(30) not null,
-    manager_id int(30),
+    role_id varchar(30) not null,
+    manager_id varchar(30),
     primary key (id)
 );
 
