@@ -19,7 +19,7 @@ const start = () => {
         type: 'list',
         message: 'What would you like to do?',
         choices: ['View All Employees', 'View All Employees By Department', 
-        'View All Employees By Mananger (in progress)','Add Employee', 'Add Manager', 'Add Role', 'Remove Employee', 
+        'View All Employees By Mananger','Add Employee', 'Add Manager', 'Add Role', 'Remove Employee', 
         'Update Employee Role (in progress)', 'Update Employee Manager (in progress)', 'View All']
     })
     .then((data) => {
@@ -31,7 +31,7 @@ const start = () => {
         if (optionSelect == 'View All Employees By Department') {
             viewEmployeesDepartment();
         };
-        if (optionSelect == 'View All Employees By Mananger (in progress)') {
+        if (optionSelect == 'View All Employees By Mananger') {
             viewEmployeesManager();
         };
         if (optionSelect == 'Add Employee') {
@@ -277,6 +277,7 @@ const addManager = () => {
                 last_name: answer.managerLN,
                 role_id: 'Manager of ' + mandepartment,
                 department: answer.department,
+                manager_id: answer.managerFN
             },
             (err) => {
                 if (err) throw err;
