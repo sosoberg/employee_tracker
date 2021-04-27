@@ -67,7 +67,8 @@ const viewEmployees = () => {
 };
 
 const viewEmployeesDepartment = () => {
-
+    inquirer
+        .prompt
 };
 
 const viewEmployeesManager = () => {
@@ -76,7 +77,7 @@ const viewEmployeesManager = () => {
 
 const addEmployee = () => {
 // asks name, role, manager
-    connection.query('SELECT * FROM role', (err, results) => {
+    connection.query('SELECT * FROM employee', (err, results) => {
         if (err) throw err;
     
         inquirer
@@ -97,8 +98,8 @@ const addEmployee = () => {
                 message: 'Select Employee Role:',
                 choices() {
                     const choiceArray = [];
-                    results.forEach(({ title }) => {
-                      choiceArray.push(title);
+                    results.forEach(({ role_id }) => {
+                      choiceArray.push(role_id);
                     });
                     return choiceArray;
                   },
@@ -107,7 +108,13 @@ const addEmployee = () => {
                 name: 'employeeManager',
                 type: 'list',
                 message: 'Employee Manager:',
-                choices: [1, 2, 3, 4],
+                choices() {
+                    const choiceArray = [];
+                    results.forEach(({ manager_id }) => {
+                      choiceArray.push(manager_id);
+                    });
+                    return choiceArray;
+                  },
             },
         ])
         .then((answer) => {
@@ -202,11 +209,13 @@ const addManager = () => {
             },
         ])
         .then((answer) => {
+            const mandepartment = answer.department;
             connection.query('INSERT INTO employee SET ?', 
             {
                 first_name: answer.managerFN,
                 last_name: answer.managerLN,
-                role_id: 'Manager',
+                role_id: 'Manager of ' + mandepartment,
+                department: answer.department,
             },
             (err) => {
                 if (err) throw err;

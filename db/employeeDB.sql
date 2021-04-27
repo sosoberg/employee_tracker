@@ -24,6 +24,7 @@ create table employee (
     last_name varchar(30) not null,
     role_id varchar(30) not null,
     manager_id varchar(30),
+    department varchar(30),
     primary key (id)
 );
 
@@ -34,10 +35,13 @@ INSERT INTO role (title, salary, department_id)
 VALUES ("Sales Lead", "100000", "Sales"), ("Lead Engineer", "150000", "Engineering"), ("Accountant", "125000", "Finance"), ("Lawyer", "190000", "Legal"),
 ("Salesperson", "80000", "Sales"), ("Software Engineer", "120000", "Engineering"), ("Legal Team Lead", "250000", "Legal");
 
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Sam", "Oberg", 1, 1), ("Jerry", "Oberg", 2, 1), ("Lard", "Oberg", 3, 1), ("Joe", "Oberg", 4, 1), ("Dan", "Oberg", 1, 1), ("Lois", "Oberg", 2, 1);
+INSERT INTO employee (first_name, last_name, role_id, manager_id, department)
+VALUES ("Sam", "Oberg", "Lead Engineer","Tammy", "Engineering"), ("Jerry", "Oberg", "Legal Team Lead","Doug", "Legal"), ("Lard", "Oberg", "Accountant","Richard", "Finance"), 
+("Joe", "Oberg", "Lawyer","Doug", "Legal"), ("Dan", "Oberg", "Salesperson","Jeff", "Sales"), ("Lois", "Oberg", "Sales Lead","Jeff", "Sales");
 
 
 SELECT * FROM employee;
 SELECT * FROM role;
 SELECT * FROM department;
+
+
