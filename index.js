@@ -172,7 +172,20 @@ const addEmployee = () => {
                 choices() {
                     const choiceArray = [];
                     results.forEach(({ manager_id }) => {
-                      choiceArray.push(manager_id);
+                        managerTitle = `${manager_id}`
+                        choiceArray.push(managerTitle);
+                    });
+                    return choiceArray;
+                  },
+            },
+            {
+                name: 'employeeDepartment',
+                type: 'list',
+                message: 'Employee Department:',
+                choices() {
+                    const choiceArray = [];
+                    results.forEach(({ department }) => {
+                        choiceArray.push(department);
                     });
                     return choiceArray;
                   },
@@ -184,7 +197,8 @@ const addEmployee = () => {
                 first_name: answer.firstName,
                 last_name: answer.lastName,
                 role_id: answer.employeeRole,
-                manager_id: answer.employeeManager
+                manager_id: answer.employeeManager,
+                department: answer.employeeDepartment,
             },
             (err) => {
                 if (err) throw err;
@@ -277,7 +291,7 @@ const addManager = () => {
                 last_name: answer.managerLN,
                 role_id: 'Manager of ' + mandepartment,
                 department: answer.department,
-                manager_id: answer.managerFN
+                manager_id: answer.managerFN,
             },
             (err) => {
                 if (err) throw err;

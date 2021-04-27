@@ -36,8 +36,8 @@ VALUES ("Sales Lead", "100000", "Sales"), ("Lead Engineer", "150000", "Engineeri
 ("Salesperson", "80000", "Sales"), ("Software Engineer", "120000", "Engineering"), ("Legal Team Lead", "250000", "Legal");
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id, department)
-VALUES ("Sam", "Oberg", "Lead Engineer","Tammy", "Engineering"), ("Jerry", "Oberg", "Legal Team Lead","Doug", "Legal"), ("Lard", "Oberg", "Accountant","Richard", "Finance"), 
-("Joe", "Oberg", "Lawyer","Doug", "Legal"), ("Dan", "Oberg", "Salesperson","Jeff", "Sales"), ("Lois", "Oberg", "Sales Lead","Jeff", "Sales");
+VALUES ("Sam", "Oberg", "Lead Engineer","Tammy (Engineering)", "Engineering"), ("Jerry", "Oberg", "Legal Team Lead (Legal)","Doug", "Legal"), ("Lard", "Oberg", "Accountant","Richard (Finance)", "Finance"), 
+("Joe", "Oberg", "Lawyer","Doug (Legal", "Legal"), ("Dan", "Oberg", "Salesperson","Jeff (Sales)", "Sales"), ("Lois", "Oberg", "Sales Lead","Jeff (Sales)", "Sales");
 
 
 SELECT * FROM employee;

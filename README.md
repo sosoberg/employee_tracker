@@ -6,7 +6,7 @@ This project is a simple employee tracker app using Imquierer and MySQL. You wil
 
 ## Usage
 
-<!-- insert video tutorial here -->
+[My Video Tutorial](https://drive.google.com/file/d/1cTOGu9OnCczM3Pzp0Nd5bUfk5WggBaFN/view)
 
 ## License
 
